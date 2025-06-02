@@ -1,0 +1,14 @@
+<div class="join flex justify-center items-cente">
+  @for (item of getPagesList(); track $index) {
+    <button
+    (click)="activatedPage.set(item)"
+    [routerLink]="[]"
+    [queryParams]="{page: item}"
+     class="join-item btn"
+     [class.btn-primary]="item === activatedPage()">
+     {{item}}
+    </button>
+  } @empty {
+    <p>No hay productos</p>
+  }
+</div>

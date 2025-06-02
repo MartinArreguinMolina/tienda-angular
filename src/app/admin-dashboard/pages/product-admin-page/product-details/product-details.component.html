@@ -1,0 +1,119 @@
+<h1 class="text-2xl font-bold">{{ product().title }}</h1>
+<div class="divider"></div>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <!-- Datos generales -->
+  <div class="flex flex-col gap-2">
+    <h2 class="text-2xl font-bold h-12">Datos generales</h2>
+    <input
+      type="text"
+      placeholder="Título"
+      class="input input-bordered w-full"
+      formControlName="title"
+      [class.border-red-500]="productForm.get('title')?.errors ?? false"
+    />
+
+    <forms-error-label [control]="productForm.get('title')!"/>
+
+    <input
+     [class.border-red-500]="productForm.get('slug')?.errors ?? false"
+     formControlName="slug" type="text" placeholder="Slug" class="input input-bordered w-full" />
+
+     <forms-error-label [control]="productForm.get('slug')!"/>
+
+    <textarea
+      class="textarea textarea-bordered"
+      placeholder="Descripción"
+      rows="6"
+      formControlName="description"
+      [class.border-red-500]="productForm.get('description')?.errors ?? false"
+    ></textarea>
+
+    <forms-error-label [control]="productForm.get('description')!"/>
+
+    <h2 class="text-lg font-bold">Datos de venta</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <input
+        type="number"
+        placeholder="Precio"
+        class="input input-bordered w-full"
+        formControlName="price"
+        [class.border-red-500]="productForm.get('price')?.errors ?? false"
+      />
+
+      <forms-error-label [control]="productForm.get('price')!"/>
+
+      <input
+        type="number"
+        placeholder="Inventario"
+        class="input input-bordered w-full"
+        formControlName="stock"
+        [class.border-red-500]="productForm.get('stock')?.errors ?? false"
+      />
+    </div>
+
+    <forms-error-label [control]="productForm.get('stock')!"/>
+
+    <!-- tags -->
+    <input
+    [class.border-red-500]="productForm.get('tags')?.errors ?? false"
+    formControlName="tags" type="text" placeholder="Tags" class="input input-bordered w-full" />
+
+    <forms-error-label [control]="productForm.get('tags')!"/>
+
+    <!-- Botones para el género -->
+    <div class="grid grid-cols-4 gap-2">
+      <!-- <button class="btn btn-sm btn-outline">Masculino</button> -->
+      <button (click)="productForm.patchValue({gender: 'men'})" [class.btn-primary]="productForm.value.gender === 'men'" type="button" class="btn btn-sm btn-outline">Masculino</button>
+      <button (click)="productForm.patchValue({gender: 'women'})" [class.btn-accent]="productForm.value.gender === 'women'" type="button" class="btn btn-sm btn-outline">Femenino</button>
+      <button (click)="productForm.patchValue({gender: 'unisex'})" [class.btn-secondary]="productForm.value.gender === 'unisex'" type="button" class="btn btn-sm btn-outline">Unisex</button>
+      <button (click)="productForm.patchValue({gender: 'kid'})" [class.btn-warning]="productForm.value.gender === 'kid'" type="button" class="btn btn-sm btn-outline">Kid</button>
+    </div>
+
+    <!-- <select class="select select-bordered w-full">
+      <option value="male">Masculino</option>
+      <option value="female">Femenino</option>
+      <option value="unisex">Unisex</option>
+    </select> -->
+
+    <!-- Sizes -->
+    <div class="grid grid-cols-6 gap-2">
+      @for (size of sizes; track size) {
+      <button [class.btn-secondary]="productForm.value.sizes?.includes(size)" (click)="onSizeClicked(size)" class="btn btn-sm" type="button">{{ size }}</button>
+      }
+    </div>
+  </div>
+
+  <!-- Imágenes -->
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-end h-12">
+      <button class="btn btn-secondary" type="submit">
+        <!-- <span class="loading loading-spinner loading-sm"></span> -->
+
+        Guardar
+      </button>
+    </div>
+
+    <app-product-carousel [images]="imagesToCarousel()" />
+
+    <input
+    (change)="onFilesChanged($event)"
+      multiple
+      accept="image/*"
+    type="file" class="file-input file-input-bordered w-full mt-4" />
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      @for (image of tempImages(); track $index) {
+        <img [src]="image" alt="" class="w-full object-cover mt-2" >
+      }
+    </div>
+  </div>
+</form>
+
+
+@if(wasSafe()){
+  <div class="alert alert-success fixed bottom-4 right-4 w-80 animate-fadeIn">
+    <span>Datos actualizados correctamente</span>
+  </div>
+}
